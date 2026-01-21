@@ -71,25 +71,7 @@ brandSelect.addEventListener("change", () => {
   const brand = brandSelect.value;
   if (!db[brand]) return;
 
-  Object.keys(db[brand]).sort().forEach(model => {
-    modelSelect.add(new Option(model, model));
-  });
-
-  modelSelect.disabled = false;
-  updateOrderButton();
-});
-
-modelSelect.addEventListener("change", () => {
-  partSelect.innerHTML = `<option disabled selected>-- Select --</option>`;
-  partSelect.disabled = true;
-  resetUI();
-
-  const brand = brandSelect.value;
-  const model = modelSelect.value;
-
-  if (!db[brand] || !db[brand][model]) return;
-
-  const models = Object.keys(db[brand]);
+const models = Object.keys(db[brand]);
 
 if (brand === "Apple") {
   models.sort((a, b) => {
@@ -107,6 +89,24 @@ models.forEach(model => {
   modelSelect.add(new Option(model, model));
 });
 
+
+  modelSelect.disabled = false;
+  updateOrderButton();
+});
+
+modelSelect.addEventListener("change", () => {
+  partSelect.innerHTML = `<option disabled selected>-- Select --</option>`;
+  partSelect.disabled = true;
+  resetUI();
+
+  const brand = brandSelect.value;
+  const model = modelSelect.value;
+
+  if (!db[brand] || !db[brand][model]) return;
+
+  Object.keys(db[brand][model]).forEach(part => {
+    partSelect.add(new Option(part, part));
+  });
 
   partSelect.disabled = false;
   updateOrderButton();
@@ -159,4 +159,3 @@ toggle.addEventListener("click", () => {
   document.body.classList.toggle("light");
   toggle.textContent = document.body.classList.contains("light") ? "🌙" : "☀️";
 });
-
