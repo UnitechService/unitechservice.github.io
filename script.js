@@ -75,11 +75,18 @@ const models = Object.keys(db[brand]);
 
 if (brand === "Apple") {
   models.sort((a, b) => {
-    const getNum = str => {
-      const match = str.match(/\d+/);
+    const normalize = model => {
+      model = model.toLowerCase();
+
+      // iPhone X family → 10
+      if (model.includes("iphone x")) return 10;
+
+      // Extract number for others (6, 7, 8, 11, 12...)
+      const match = model.match(/\d+/);
       return match ? parseInt(match[0]) : 0;
     };
-    return getNum(a) - getNum(b);
+
+    return normalize(a) - normalize(b);
   });
 } else {
   models.sort();
@@ -88,7 +95,6 @@ if (brand === "Apple") {
 models.forEach(model => {
   modelSelect.add(new Option(model, model));
 });
-
 
   modelSelect.disabled = false;
   updateOrderButton();
