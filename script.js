@@ -89,9 +89,24 @@ modelSelect.addEventListener("change", () => {
 
   if (!db[brand] || !db[brand][model]) return;
 
-  Object.keys(db[brand][model]).forEach(part => {
-    partSelect.add(new Option(part, part));
+  const models = Object.keys(db[brand]);
+
+if (brand === "Apple") {
+  models.sort((a, b) => {
+    const getNum = str => {
+      const match = str.match(/\d+/);
+      return match ? parseInt(match[0]) : 0;
+    };
+    return getNum(a) - getNum(b);
   });
+} else {
+  models.sort();
+}
+
+models.forEach(model => {
+  modelSelect.add(new Option(model, model));
+});
+
 
   partSelect.disabled = false;
   updateOrderButton();
@@ -144,3 +159,4 @@ toggle.addEventListener("click", () => {
   document.body.classList.toggle("light");
   toggle.textContent = document.body.classList.contains("light") ? "🌙" : "☀️";
 });
+
