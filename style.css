@@ -1,6 +1,11 @@
 /* ==================================================
    UnitechService — Ultra Modern UI (No logic change)
    ================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 :root {
   --bg-main: #030712;
@@ -28,15 +33,15 @@ body {
     var(--bg-main);
   color: var(--text-main);
   display: flex;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* LAYOUT */
 .column {
-  padding: 22px;
+  overflow-x: visible;
   overflow-y: auto;
+  padding: 20px;
 }
-
 .side-column {
   width: 25%;
 }
@@ -83,7 +88,7 @@ h1 {
   letter-spacing: 5px;
   text-transform: uppercase;
   color: white;
-  text-shadow: 0 0 30px var(--primary-glow);
+
 }
 
 h2 {
@@ -226,6 +231,7 @@ a:hover {
 
   .column {
     width: 100%;
+    padding: 32px;
   }
 
   .form-container {
@@ -337,4 +343,226 @@ select:disabled {
 
 #orderButton:not(:disabled)::after {
   content: " →";
+}
+
+/* =====================================
+   FINAL TEXT DEPTH — STRONG & CLEAR
+   ===================================== */
+
+/* 🔥 H1 — STRONG EMBOSSED (RAISED) */
+h1 {
+  color: #f8fafc;
+  text-shadow:
+    -2px -2px 3px rgba(255, 255, 255, 0.45),
+     3px  3px 6px rgba(0, 0, 0, 0.95);
+}
+
+/* 🕳️ ALL OTHER TEXT — STRONG DEBOSSED (ENGRAVED) */
+h2, h3,
+label,
+.info-label,
+p,
+li,
+span {
+  color: #9ca3af;
+  text-shadow:
+     2px  2px 3px rgba(0, 0, 0, 0.95),
+    -2px -2px 2px rgba(255, 255, 255, 0.08);
+}
+
+h1:hover {
+  text-shadow:
+    -1px -1px 2px rgba(255,255,255,0.3),
+     2px  2px 4px rgba(0,0,0,0.9);
+}
+
+label:hover,
+li:hover {
+  text-shadow:
+     1px  1px 2px rgba(0,0,0,0.9),
+    -1px -1px 1px rgba(255,255,255,0.05);
+}
+
+/* ==========================
+   ORDER ACTION BUTTONS
+   ========================== */
+
+.order-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.order-actions button {
+  flex: 1;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  border-radius: 16px;
+}
+
+#sendRepairButton {
+  background: linear-gradient(135deg, #1e293b, #020617);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+#sendRepairButton:hover:not(:disabled) {
+  box-shadow: 0 0 25px rgba(34,197,94,0.45);
+}
+
+/* ==========================
+   ORDER BUTTON TEXT STYLE FIX
+   ========================== */
+
+/* PRIMARY — Order visit (GREEN, BIG TEXT) */
+#orderVisitButton {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #052e14;
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  border: none;
+}
+
+#orderVisitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(34,197,94,0.55);
+}
+
+/* SECONDARY — Send for repair (GREEN TEXT, DARK BUTTON) */
+#sendRepairButton {
+  background: linear-gradient(135deg, #020617, #020617);
+  color: #22c55e;
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  border: 1px solid rgba(34,197,94,0.35);
+}
+
+#sendRepairButton:hover:not(:disabled) {
+  box-shadow: 0 0 30px rgba(34,197,94,0.45);
+  transform: translateY(-2px);
+}
+
+/* DISABLED STATE (BOTH) */
+#orderVisitButton:disabled,
+#sendRepairButton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================
+   CUSTOM DROPDOWN UI
+   ========================== */
+
+.custom-dropdown {
+  position: relative;
+  overflow: visible;
+}
+
+.custom-dropdown select {
+  display: none;
+}
+
+/* Display */
+.dropdown-display {
+  padding: 17px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.08);
+  color: #e5e7eb;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-display:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+/* Arrow */
+.dropdown-display .arrow {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #9ca3af;
+  border-bottom: 2px solid #9ca3af;
+  transform: rotate(45deg);
+}
+
+/* Dropdown list */
+.dropdown-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  background: rgba(3,7,18,0.95);
+  border-radius: 14px;
+  z-index: 10000;
+  pointer-events: auto;
+  display: none;
+}
+
+/* Item */
+.dropdown-list li {
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dropdown-list li:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* ==========================
+   DROPDOWN ARROW → RIGHT SIDE
+   ========================== */
+
+.dropdown-display {
+  position: relative;
+  padding-right: 44px; /* ადგილი ისრისთვის */
+}
+
+.dropdown-display .arrow {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.column h1,
+.column h2,
+.column p,
+.column label {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.column h1 {
+  margin-bottom: 18px;
+}
+
+.column h2,
+.column label {
+  margin-bottom: 10px;
+}
+
+.column p {
+  margin-bottom: 14px;
+}
+
+.columns {
+  gap: 32px;
+}
+.column h2:first-child {
+  margin-top: 0;
+}
+
+.column h1:first-child {
+  margin-top: 0;
 }
