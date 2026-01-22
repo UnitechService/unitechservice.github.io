@@ -19,7 +19,6 @@
 </head>
 
 <body>
-<button id="themeToggle">☀️</button>
     <!-- DATA + LOGIC -->
 <script src="prices.js" defer></script>
 <script src="script.js" defer></script>
@@ -55,29 +54,53 @@
 
         <div class="form-container">
 
-            <div class="form-group">
-                <label>Manufacturer / მწარმოებელი</label>
-                <select id="brandSelect">
-                    <option value="" disabled selected>-- Select --</option>
-                </select>
-            </div>
+            <div class="form-group custom-dropdown">
+  <label>Manufacturer / მწარმოებელი</label>
 
-            <div class="form-group">
-                <label>Model / მოდელი</label>
-                <select id="modelSelect" disabled>
-                    <option value="" disabled selected>-- Select --</option>
-                </select>
-            </div>
+  <div class="dropdown-display">
+    <span>-- Select --</span>
+    <div class="arrow"></div>
+  </div>
 
-            <div class="form-group">
-                <label>Service Part / ნაწილი</label>
-                <select id="partSelect" disabled>
-                    <option value="" disabled selected>-- Select --</option>
-                </select>
-            </div>
+  <ul class="dropdown-list"></ul>
+  <select id="brandSelect">
+    <option value="" disabled selected>-- Select --</option>
+  </select>
+</div>
 
+
+<div class="form-group custom-dropdown">
+  <label>Model / მოდელი</label>
+
+  <div class="dropdown-display">
+    <span>-- Select --</span>
+    <div class="arrow"></div>
+  </div>
+
+  <ul class="dropdown-list"></ul>
+  <select id="modelSelect" disabled>
+    <option value="" disabled selected>-- Select --</option>
+  </select>
+</div>
+
+        
+<div class="form-group custom-dropdown">
+  <label>Part / ნაწილი</label>
+
+  <div class="dropdown-display">
+    <span>-- Select --</span>
+    <div class="arrow"></div>
+  </div>
+
+  <ul class="dropdown-list"></ul>
+  <select id="partSelect" disabled>
+    <option value="" disabled selected>-- Select --</option>
+  </select>
+</div>
+
+ 
             <div class="info-label">
-                ფასში შედის შეცვლის საფასურიც • Price includes replacement fee
+             <b>   ფასში შედის შეცვლის საფასურიც • Price includes replacement fee </b>
             </div>
 
             <div class="price-container">
@@ -92,9 +115,17 @@
                 </div>
             </div>
 
-            <button id="orderButton" disabled>
-                Order now • შეკვეთა
-            </button>
+<div class="order-actions">
+
+  <button id="orderVisitButton" disabled>
+    Order visit • დაჯავშნე ვიზიტი
+  </button>
+
+  <button id="sendRepairButton" disabled>
+    Send for repair • გაგზავნე შესაკეთებლად
+  </button>
+
+</div>
 
         </div>
     </div>
