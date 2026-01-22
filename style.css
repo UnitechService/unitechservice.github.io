@@ -566,3 +566,17 @@ li:hover {
 .column h1:first-child {
   margin-top: 0;
 }
+/* ==========================
+   MOBILE FIX — ORDER BUTTONS
+   ========================== */
+
+@media (max-width: 768px) {
+  .order-actions {
+    flex-direction: column;
+  }
+
+  .order-actions button {
+    width: 100%;
+  }
+}
+
