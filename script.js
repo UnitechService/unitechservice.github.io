@@ -11,9 +11,13 @@ const db = PRICES;
 const brandSelect = document.getElementById("brandSelect");
 const modelSelect = document.getElementById("modelSelect");
 const partSelect = document.getElementById("partSelect");
+
 const originalPrice = document.getElementById("originalPrice");
 const budgetPrice = document.getElementById("budgetPrice");
-const orderButton = document.getElementById("orderButton");
+
+const orderVisitButton = document.getElementById("orderVisitButton");
+const sendRepairButton = document.getElementById("sendRepairButton");
+
 const partImage = document.getElementById("partImage");
 
 // ---------- HELPERS ----------
@@ -21,8 +25,15 @@ const partImage = document.getElementById("partImage");
 function resetUI() {
   originalPrice.textContent = "-";
   budgetPrice.textContent = "-";
-  orderButton.disabled = true;
+  orderVisitButton.disabled = true;
+  sendRepairButton.disabled = true;
   partImage.src = "img/logo.png";
+}
+
+function updateOrderButtons() {
+  const ready = brandSelect.value && modelSelect.value && partSelect.value;
+  orderVisitButton.disabled = !ready;
+  sendRepairButton.disabled = !ready;
 }
 
 function updatePartImage(partName) {
@@ -49,10 +60,6 @@ function updatePartImage(partName) {
   partImage.src = "img/logo.png";
 }
 
-function updateOrderButton() {
-  orderButton.disabled = !(brandSelect.value && modelSelect.value && partSelect.value);
-}
-
 // ---------- LOADERS ----------
 
 window.addEventListener("load", () => {
@@ -60,6 +67,8 @@ window.addEventListener("load", () => {
     brandSelect.add(new Option(brand, brand));
   });
 });
+
+// ---------- BRAND ----------
 
 brandSelect.addEventListener("change", () => {
   modelSelect.innerHTML = `<option disabled selected>-- Select --</option>`;
@@ -71,34 +80,30 @@ brandSelect.addEventListener("change", () => {
   const brand = brandSelect.value;
   if (!db[brand]) return;
 
-const models = Object.keys(db[brand]);
+  const models = Object.keys(db[brand]);
 
-if (brand === "Apple") {
-  models.sort((a, b) => {
-    const normalize = model => {
-      model = model.toLowerCase();
+  if (brand === "Apple") {
+    models.sort((a, b) => {
+      const normalize = model => {
+        model = model.toLowerCase();
+        if (model.includes("iphone x")) return 10;
+        const match = model.match(/\d+/);
+        return match ? parseInt(match[0]) : 0;
+      };
+      return normalize(a) - normalize(b);
+    });
+  } else {
+    models.sort();
+  }
 
-      // iPhone X family → 10
-      if (model.includes("iphone x")) return 10;
-
-      // Extract number for others (6, 7, 8, 11, 12...)
-      const match = model.match(/\d+/);
-      return match ? parseInt(match[0]) : 0;
-    };
-
-    return normalize(a) - normalize(b);
+  models.forEach(model => {
+    modelSelect.add(new Option(model, model));
   });
-} else {
-  models.sort();
-}
-
-models.forEach(model => {
-  modelSelect.add(new Option(model, model));
-});
 
   modelSelect.disabled = false;
-  updateOrderButton();
 });
+
+// ---------- MODEL ----------
 
 modelSelect.addEventListener("change", () => {
   partSelect.innerHTML = `<option disabled selected>-- Select --</option>`;
@@ -115,8 +120,9 @@ modelSelect.addEventListener("change", () => {
   });
 
   partSelect.disabled = false;
-  updateOrderButton();
 });
+
+// ---------- PART ----------
 
 partSelect.addEventListener("change", () => {
   resetUI();
@@ -129,25 +135,27 @@ partSelect.addEventListener("change", () => {
 
   const priceData = db[brand][model][part];
 
-  originalPrice.textContent = priceData.o && priceData.o !== "-" ? priceData.o : "-";
-  budgetPrice.textContent = priceData.b && priceData.b !== "-" ? priceData.b : "-";
+originalPrice.textContent =
+  priceData.o && priceData.o !== "-" ? priceData.o : "-";
+
+budgetPrice.textContent =
+  priceData.b && priceData.b !== "-" ? priceData.b : "-";
+
 
   updatePartImage(part);
-  updateOrderButton();
+  updateOrderButtons();
 });
 
-// ---------- WHATSAPP ----------
+// ---------- ORDER VISIT (WHATSAPP) ----------
 
-orderButton.addEventListener("click", () => {
+orderVisitButton.addEventListener("click", () => {
   const brand = brandSelect.value;
   const model = modelSelect.value;
   const part = partSelect.value;
 
-  if (!brand || !model || !part) return;
-
   const phone = "995591017347";
   const message = `
-გამარჯობა, მსურს დავჯავშნო ვიზიტი:
+გამარჯობა, მსურს ვიზიტის დაჯავშნა:
 
 ბრენდი: ${brand}
 მოდელი: ${model}
@@ -158,10 +166,109 @@ orderButton.addEventListener("click", () => {
   window.open(url, "_blank");
 });
 
-// ===== THEME TOGGLE (NO LOGIC CHANGE) =====
+// ---------- SEND FOR REPAIR (DELIVERY) ----------
+
+sendRepairButton.addEventListener("click", () => {
+  const address = "კეკელიძის 8, თბილისი";
+
+  const services = [
+    { name: "Yandex", url: "https://taxi.yandex.com" },
+    { name: "Glovo", url: "https://glovoapp.com" },
+    { name: "Wolt", url: "https://wolt.com" },
+    { name: "Bolt", url: "https://bolt.eu" }
+  ];
+
+  let text = "აირჩიეთ მიწოდების სერვისი:\n\n";
+  services.forEach((s, i) => {
+    text += `${i + 1}. ${s.name}\n`;
+  });
+
+  const choice = prompt(text);
+  const selected = services[choice - 1];
+
+  if (selected) {
+    window.open(selected.url, "_blank");
+    alert(
+      "კურიერის გამოძახებისას მიუთითეთ ეს მისამართი:\n\n" +
+      address
+    );
+  }
+});
+
+// ---------- THEME TOGGLE ----------
+
 const toggle = document.getElementById("themeToggle");
 
-toggle.addEventListener("click", () => {
-  document.body.classList.toggle("light");
-  toggle.textContent = document.body.classList.contains("light") ? "🌙" : "☀️";
+if (toggle) {
+  toggle.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+    toggle.textContent = document.body.classList.contains("light") ? "🌙" : "☀️";
+  });
+}
+
+
+// ==========================
+// CUSTOM DROPDOWN (FIXED)
+// ==========================
+
+document.querySelectorAll(".custom-dropdown").forEach(dropdown => {
+  const display = dropdown.querySelector(".dropdown-display");
+  const list = dropdown.querySelector(".dropdown-list");
+  const select = dropdown.querySelector("select");
+  const span = display.querySelector("span");
+
+  function rebuildList() {
+    list.innerHTML = "";
+
+    [...select.options].forEach(opt => {
+      if (opt.disabled) return;
+
+      const li = document.createElement("li");
+      li.textContent = opt.textContent;
+
+      li.addEventListener("click", e => {
+        e.stopPropagation(); // 🔴 CRITICAL FIX
+
+        select.value = opt.value;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+
+        span.textContent = opt.textContent;
+        list.style.display = "none";
+        dropdown.classList.remove("open");
+      });
+
+      list.appendChild(li);
+    });
+  }
+
+  display.addEventListener("click", e => {
+    e.stopPropagation();
+
+    rebuildList();
+    const isOpen = list.style.display === "block";
+
+    document
+      .querySelectorAll(".dropdown-list")
+      .forEach(l => (l.style.display = "none"));
+
+    document
+      .querySelectorAll(".custom-dropdown")
+      .forEach(d => d.classList.remove("open"));
+
+    if (!isOpen) {
+      list.style.display = "block";
+      dropdown.classList.add("open");
+    }
+  });
+});
+
+// CLOSE ON OUTSIDE CLICK
+document.addEventListener("click", () => {
+  document
+    .querySelectorAll(".dropdown-list")
+    .forEach(l => (l.style.display = "none"));
+
+  document
+    .querySelectorAll(".custom-dropdown")
+    .forEach(d => d.classList.remove("open"));
 });
