@@ -148,23 +148,12 @@ budgetPrice.textContent =
 
 // ---------- ORDER VISIT (WHATSAPP) ----------
 
-orderVisitButton.addEventListener("click", () => {
-  const brand = brandSelect.value;
-  const model = modelSelect.value;
-  const part = partSelect.value;
+orderVisitButton.addEventListener("click", (e) => {
+  e.preventDefault();
 
-  const phone = "995591017347";
-  const message = `
-გამარჯობა, მსურს ვიზიტის დაჯავშნა:
-
-ბრენდი: ${brand}
-მოდელი: ${model}
-ნაწილი: ${part}
-  `.trim();
-
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank");
+  bookingModal.style.display = "flex";
 });
+
 
 // ---------- SEND FOR REPAIR (DELIVERY) ----------
 
@@ -272,3 +261,70 @@ document.addEventListener("click", () => {
     .querySelectorAll(".custom-dropdown")
     .forEach(d => d.classList.remove("open"));
 });
+
+// ================= BOOKING MODAL =================
+
+const bookingModal = document.getElementById("bookingModal");
+const bookingDate = document.getElementById("bookingDate");
+const bookingTime = document.getElementById("bookingTime");
+const confirmBooking = document.getElementById("confirmBooking");
+const closeBooking = document.getElementById("closeBooking");
+const bookingInput = document.getElementById("bookingDateTime");
+
+// Order Visit ღილაკზე დაჭერა
+
+
+// დახურვა
+closeBooking.addEventListener("click", () => {
+  bookingModal.style.display = "none";
+});
+
+// კვირა დაბლოკვა + დროების გენერაცია
+bookingDate.addEventListener("change", () => {
+  const selected = new Date(bookingDate.value);
+
+  if (selected.getDay() === 0) {
+    alert("კვირას არ ვმუშაობთ");
+    bookingDate.value = "";
+    return;
+  }
+
+  bookingTime.innerHTML = "";
+
+  for (let hour = 12; hour < 19; hour++) {
+    const option = document.createElement("option");
+    option.value = `${hour}:00`;
+    option.textContent = `${hour}:00`;
+    bookingTime.appendChild(option);
+  }
+});
+
+// დადასტურება
+confirmBooking.addEventListener("click", () => {
+
+  if (!bookingDate.value || !bookingTime.value) {
+    alert("აირჩიეთ დღე და დრო");
+    return;
+  }
+
+  bookingModal.style.display = "none";
+
+  const brand = brandSelect.value;
+  const model = modelSelect.value;
+  const part = partSelect.value;
+
+  const phone = "995591017347";
+
+  const message = `
+გამარჯობა, მსურს ვიზიტის დაჯავშნა:
+
+ბრენდი: ${brand}
+მოდელი: ${model}
+ნაწილი: ${part}
+ვიზიტის დრო: ${bookingDate.value} ${bookingTime.value}
+  `.trim();
+
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank");
+});
+
