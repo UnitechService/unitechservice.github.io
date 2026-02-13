@@ -580,3 +580,43 @@ li:hover {
   }
 }
 
+.booking-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.booking-content {
+  background: #111827;
+  padding: 25px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+}
+
+.booking-content input,
+.booking-content select {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: none;
+}
+
+.booking-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.booking-buttons button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
